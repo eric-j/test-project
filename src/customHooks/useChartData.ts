@@ -23,6 +23,10 @@ const useChartData = (
     const fetchData = async () => {
       if (!dataFetchedRef.current) {
         try {
+          // @TODO - Eventually we would use an actual endpoint:
+          // const response = await fetch("https://endpoint-url-here/data");
+          // const data = await response.json();
+
           const { data } = mockResponse;
 
           const uniqueDeviceTypes = Array.from(
@@ -34,7 +38,6 @@ const useChartData = (
             new Set(data.flatMap((item) => item.app_version))
           );
 
-          // Cache the results
           cachedDataRef.current = {
             deviceTypes: uniqueDeviceTypes,
             transformedData: Object.values(transformedData),
