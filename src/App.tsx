@@ -1,11 +1,10 @@
 import React from "react";
 
-import MobileLineChart from "./MobileLineChart";
-
 const App: React.FC = () => {
   return (
     <div className="App">
-      <MobileLineChart />
+      If you are reading this, I just realized I misread the instructions,
+      working on a better answer.
     </div>
   );
 };

@@ -1,8 +1,7 @@
 export interface CrashData {
   app_version: string;
-  crash_count: number[];
+  "crash.count": number[];
   timestamp: number[];
-  device_type: string;
 }
 
 export interface ApiResponse {
@@ -18,8 +17,7 @@ export interface TransformedData {
 }
 
 export interface DataItem {
-  device_type: string;
   timestamp: number[];
   app_version: string;
-  crash_count: number[];
+  "crash.count": number[];
 }
