@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   LineChart,
   Line,
@@ -9,44 +9,14 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { mockResponse } from "./mockData";
-import { TransformedData } from "./types";
+import useChartData from "./customHooks/useChartData";
+import useDeviceSelection from "./customHooks/useDeviceSelection";
 import { LINE_CHART_COLORS } from "./consts/chartColors";
+import { mockResponse } from "./mockData";
 
 const MobileLineChart: React.FC = () => {
-  const [chartData, setChartData] = useState<TransformedData[]>([]);
-  const [selectedDevice, setSelectedDevice] = useState<string>("All");
-
-  useEffect(() => {
-    const { data } = mockResponse;
-
-    const transformedData: Record<string, TransformedData> = {};
-
-    data.forEach((item) => {
-      if (selectedDevice === "All" || item.device_type === selectedDevice) {
-        item.timestamp.forEach((timestamp, index) => {
-          const date = new Date(timestamp * 1000);
-          const formattedDate = new Intl.DateTimeFormat("en-US", {
-            month: "short",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-          }).format(date);
-          if (!transformedData[formattedDate]) {
-            transformedData[formattedDate] = { name: formattedDate };
-          }
-          transformedData[formattedDate][item.app_version] =
-            item.crash_count[index];
-        });
-      }
-    });
-
-    setChartData(Object.values(transformedData));
-  }, [selectedDevice]);
-
-  const handleDeviceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDevice(event.target.value);
-  };
+  const { selectedDevice, handleDeviceChange } = useDeviceSelection();
+  const chartData = useChartData(selectedDevice);
 
   return (
     <>
