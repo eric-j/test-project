@@ -31,13 +31,16 @@ const MobileLineChart: React.FC = () => {
             className="chart-select"
           >
             <option value="All">All</option>
-            {Array.from(
-              new Set(mockResponse.data.map((item) => item.device_type))
-            ).map((deviceType, index) => (
-              <option key={index} value={deviceType}>
-                {deviceType}
-              </option>
-            ))}
+            {mockResponse.data
+              .map((item) => item.device_type)
+              .filter(
+                (deviceType, index, self) => self.indexOf(deviceType) === index
+              )
+              .map((deviceType, index) => (
+                <option key={index} value={deviceType}>
+                  {deviceType}
+                </option>
+              ))}
           </select>
         </div>
       </div>
