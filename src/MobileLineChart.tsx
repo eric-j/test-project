@@ -12,11 +12,10 @@ import {
 import useChartData from "./customHooks/useChartData";
 import useDeviceSelection from "./customHooks/useDeviceSelection";
 import { LINE_CHART_COLORS } from "./consts/chartColors";
-import { mockResponse } from "./mockData";
 
 const MobileLineChart: React.FC = () => {
   const { selectedDevice, handleDeviceChange } = useDeviceSelection();
-  const chartData = useChartData(selectedDevice);
+  const { chartData, deviceTypes, appVersions } = useChartData(selectedDevice);
 
   return (
     <>
@@ -31,16 +30,11 @@ const MobileLineChart: React.FC = () => {
             className="chart-select"
           >
             <option value="All">All</option>
-            {mockResponse.data
-              .map((item) => item.device_type)
-              .filter(
-                (deviceType, index, self) => self.indexOf(deviceType) === index
-              )
-              .map((deviceType, index) => (
-                <option key={index} value={deviceType}>
-                  {deviceType}
-                </option>
-              ))}
+            {deviceTypes.map((deviceType, index) => (
+              <option key={index} value={deviceType}>
+                {deviceType}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -55,11 +49,11 @@ const MobileLineChart: React.FC = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          {mockResponse.data.map((item, index) => (
+          {appVersions.map((appVersion, index) => (
             <Line
-              key={item.app_version}
+              key={appVersion}
               type="monotone"
-              dataKey={item.app_version}
+              dataKey={appVersion}
               stroke={LINE_CHART_COLORS[index % LINE_CHART_COLORS.length]}
             />
           ))}
