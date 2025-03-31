@@ -11,13 +11,17 @@ export interface ApiResponse {
   data: CrashData[];
 }
 
-export interface TransformedData {
+export interface ChartDataEntry {
   name: string;
-  [key: string]: number | string;
+  [appVersion: string]: number | string;
 }
 
-export interface DataItem {
-  timestamp: number[];
+export interface MockResponseData {
   app_version: string;
+  timestamp: number[];
   "crash.count": number[];
+}
+
+export interface MockResponseType {
+  data: MockResponseData[];
 }
