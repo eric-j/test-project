@@ -19,7 +19,7 @@ const useMobileLineChartData = () => {
           (acc, item) => {
             item.timestamp.forEach((time, index) => {
               const date = new Date(time * 1000).toLocaleString();
-              if (!acc[date]) acc[date] = { name: date };
+              if (!acc[date]) acc[date] = { time: date };
 
               acc[date][item.app_version] = item["crash.count"][index];
             });

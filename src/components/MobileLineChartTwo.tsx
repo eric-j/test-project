@@ -27,7 +27,7 @@ const MobileLineChart: React.FC = () => {
           margin={{ top: 20, right: 30, left: 20, bottom: 0 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
+          <XAxis dataKey="time" />
           <YAxis />
           <Tooltip />
           <Legend />

@@ -12,7 +12,7 @@ export interface ApiResponse {
 }
 
 export interface ChartDataEntry {
-  name: string;
+  time: string;
   [appVersion: string]: number | string;
 }
 
