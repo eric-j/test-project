@@ -1,16 +1,3 @@
-export interface CrashData {
-  app_version: string;
-  "crash.count": number[];
-  timestamp: number[];
-}
-
-export interface ApiResponse {
-  end: string;
-  start: string;
-  step: number;
-  data: CrashData[];
-}
-
 export interface ChartDataEntry {
   time: string;
   [appVersion: string]: number | string;
@@ -24,4 +11,7 @@ export interface MockResponseData {
 
 export interface MockResponseType {
   data: MockResponseData[];
+  end: string;
+  start: string;
+  step: number;
 }

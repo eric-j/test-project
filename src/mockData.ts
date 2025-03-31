@@ -1,29 +1,6 @@
-import { ApiResponse } from "./types";
+import { MockResponseType } from "./types";
 
-export const mockResponse: ApiResponse = {
-  end: "2025-03-17T12:30:00Z",
-  start: "2025-03-16T12:30:00Z",
-  step: 600,
-  data: [
-    {
-      app_version: "25.11.0.1",
-      "crash.count": [2, 1],
-      timestamp: [1742143800, 1742161800],
-    },
-    {
-      app_version: "25.12.0.2",
-      "crash.count": [4, 5],
-      timestamp: [1742135400, 1742136000],
-    },
-    {
-      app_version: "25.12.0.3",
-      "crash.count": [1, 7],
-      timestamp: [1742136600, 1742136000],
-    },
-  ],
-};
-
-export const mockResponseTwo: ApiResponse = {
+export const mockResponse: MockResponseType = {
   end: "2025-03-17T12:30:00Z",
   start: "2025-03-16T12:30:00Z",
   step: 600,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { mockResponseTwo } from "../mockData";
+import { mockResponse } from "../mockData";
 import { ChartDataEntry, MockResponseType } from "../types";
 
 const useMobileLineChartData = () => {
@@ -13,7 +13,7 @@ const useMobileLineChartData = () => {
         // const response = await fetch("your-api-endpoint-here");
         // const result = await response.json();
 
-        const result: MockResponseType = mockResponseTwo;
+        const result: MockResponseType = mockResponse;
 
         const parsedData = result.data.reduce<Record<string, ChartDataEntry>>(
           (acc, item) => {

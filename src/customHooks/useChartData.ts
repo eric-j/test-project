@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { MockResponseType, MockResponseData } from "../types";
 import { mockResponse } from "../mockData";
 
 interface VersionData {
@@ -20,16 +21,19 @@ const useChartData = () => {
         // @TODO - use real endpoint
         // const response = await fetch("your-api-endpoint-here");
         // const result = await response.json();
+
+        const result: MockResponseType = mockResponse;
+
         const timestamps = generateTimestamps(
-          mockResponse.start,
-          mockResponse.end,
-          mockResponse.step
+          result.start,
+          result.end,
+          result.step
         );
-        const parsedData = initializeParsedData(timestamps);
-        updateParsedData(parsedData, mockResponse.data);
+        const parsedData = initializeParsedData(timestamps, result.data);
+        updateParsedData(parsedData, result.data);
 
         setChartData(Object.values(parsedData));
-        setAppVersions(getUniqueAppVersions(mockResponse.data));
+        setAppVersions(getUniqueAppVersions(result.data));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -57,13 +61,16 @@ const generateTimestamps = (
   return timestamps;
 };
 
-const initializeParsedData = (timestamps: number[]): ParsedData => {
+const initializeParsedData = (
+  timestamps: number[],
+  data: MockResponseData[]
+): ParsedData => {
   const parsedData: ParsedData = {};
 
   timestamps.forEach((t) => {
     const date = new Date(t * 1000).toLocaleString();
     parsedData[date] = { time: date };
-    mockResponse.data.forEach((item) => {
+    data.forEach((item) => {
       parsedData[date][item.app_version] = 0;
     });
   });
@@ -73,7 +80,7 @@ const initializeParsedData = (timestamps: number[]): ParsedData => {
 
 const updateParsedData = (
   parsedData: ParsedData,
-  data: typeof mockResponse.data
+  data: MockResponseData[]
 ): void => {
   data.forEach((item) => {
     item.timestamp.forEach((time, index) => {
