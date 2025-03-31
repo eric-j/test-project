@@ -27,7 +27,10 @@ const MobileLineChart: React.FC<MobileLineChartProps> = ({
   return (
     <>
       <div className="chart-header">
-        <h2>Using Start + End + Second Interval</h2>
+        {usesStepIntervals && <h2>Using Start + End + Second Interval</h2>}
+        {!usesStepIntervals && (
+          <h2>Using just timestamps provided in data array</h2>
+        )}
       </div>
 
       <ResponsiveContainer width="100%" height={400}>
