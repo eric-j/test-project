@@ -1,18 +1,9 @@
-import { useState, useEffect } from "react";
-import { MockResponseType, MockResponseData } from "../types";
+import { useEffect, useState } from "react";
 import { mockResponse } from "../mockData";
-
-interface VersionData {
-  time: string;
-  [appVersion: string]: number | string;
-}
-
-interface ParsedData {
-  [date: string]: VersionData;
-}
+import { ChartDataEntry, MockResponseType } from "../types";
 
 const useChartData = () => {
-  const [chartData, setChartData] = useState<VersionData[]>([]);
+  const [chartData, setChartData] = useState<ChartDataEntry[]>([]);
   const [appVersions, setAppVersions] = useState<string[]>([]);
 
   useEffect(() => {
@@ -24,16 +15,23 @@ const useChartData = () => {
 
         const result: MockResponseType = mockResponse;
 
-        const timestamps = generateTimestamps(
-          result.start,
-          result.end,
-          result.step
+        const parsedData = result.data.reduce<Record<string, ChartDataEntry>>(
+          (acc, item) => {
+            item.timestamp.forEach((time, index) => {
+              const date = new Date(time * 1000).toLocaleString();
+              if (!acc[date]) acc[date] = { time: date };
+
+              acc[date][item.app_version] = item["crash.count"][index];
+            });
+            return acc;
+          },
+          {}
         );
-        const parsedData = initializeParsedData(timestamps, result.data);
-        updateParsedData(parsedData, result.data);
 
         setChartData(Object.values(parsedData));
-        setAppVersions(getUniqueAppVersions(result.data));
+        setAppVersions(
+          Array.from(new Set(result.data.map((item) => item.app_version)))
+        );
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -43,58 +41,6 @@ const useChartData = () => {
   }, []);
 
   return { chartData, appVersions };
-};
-
-const generateTimestamps = (
-  start: string,
-  end: string,
-  step: number
-): number[] => {
-  const startTime = new Date(start).getTime() / 1000;
-  const endTime = new Date(end).getTime() / 1000;
-  const timestamps: number[] = [];
-
-  for (let t = startTime; t <= endTime; t += step) {
-    timestamps.push(t);
-  }
-
-  return timestamps;
-};
-
-const initializeParsedData = (
-  timestamps: number[],
-  data: MockResponseData[]
-): ParsedData => {
-  const parsedData: ParsedData = {};
-
-  timestamps.forEach((t) => {
-    const date = new Date(t * 1000).toLocaleString();
-    parsedData[date] = { time: date };
-    data.forEach((item) => {
-      parsedData[date][item.app_version] = 0;
-    });
-  });
-
-  return parsedData;
-};
-
-const updateParsedData = (
-  parsedData: ParsedData,
-  data: MockResponseData[]
-): void => {
-  data.forEach((item) => {
-    item.timestamp.forEach((time, index) => {
-      const date = new Date(time * 1000).toLocaleString();
-      if (!parsedData[date]) {
-        parsedData[date] = { time: date };
-      }
-      parsedData[date][item.app_version] = item["crash.count"][index];
-    });
-  });
-};
-
-const getUniqueAppVersions = (data: typeof mockResponse.data): string[] => {
-  return data.map((item) => item.app_version);
 };
 
 export default useChartData;

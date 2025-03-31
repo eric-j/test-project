@@ -1,7 +1,7 @@
 import React from "react";
 
 import MobileLineChart from "./components/MobileLineChart";
-import MobileLineChartTwo from "./components/MobileLineChartTwo";
+// import MobileLineChartTwo from "./components/MobileLineChartTwo";
 
 const App: React.FC = () => {
   return (
@@ -13,8 +13,8 @@ const App: React.FC = () => {
         "step" interval between the "start" and "end" time. Below you will see
         an example of both.
       </div>
+      <MobileLineChart usesStepIntervals={true} />
       <MobileLineChart />
-      <MobileLineChartTwo />
     </div>
   );
 };

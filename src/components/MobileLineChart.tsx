@@ -10,10 +10,19 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import useChartData from "../customHooks/useChartData";
+import useChartStepData from "../customHooks/useChartStepData";
 import { LINE_CHART_COLORS } from "../consts/chartColors";
 
-const MobileLineChart: React.FC = () => {
-  const { chartData, appVersions } = useChartData();
+interface MobileLineChartProps {
+  usesStepIntervals?: boolean;
+}
+
+const MobileLineChart: React.FC<MobileLineChartProps> = ({
+  usesStepIntervals,
+}) => {
+  const { chartData, appVersions } = usesStepIntervals
+    ? useChartStepData()
+    : useChartData();
 
   return (
     <>
