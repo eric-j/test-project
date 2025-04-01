@@ -15,18 +15,7 @@ const useChartData = () => {
 
         const result: MockResponseType = mockResponse;
 
-        const parsedData = result.data.reduce<Record<string, ChartDataEntry>>(
-          (acc, item) => {
-            item.timestamp.forEach((time, index) => {
-              const date = new Date(time * 1000).toLocaleString();
-              if (!acc[date]) acc[date] = { time: date };
-
-              acc[date][item.app_version] = item["crash.count"][index];
-            });
-            return acc;
-          },
-          {}
-        );
+        const parsedData = parseResponseData(result.data);
 
         setChartData(Object.values(parsedData));
         setAppVersions(
@@ -41,6 +30,20 @@ const useChartData = () => {
   }, []);
 
   return { chartData, appVersions };
+};
+
+const parseResponseData = (
+  data: MockResponseType["data"]
+): Record<string, ChartDataEntry> => {
+  return data.reduce<Record<string, ChartDataEntry>>((acc, item) => {
+    item.timestamp.forEach((time, index) => {
+      const date = new Date(time * 1000).toLocaleString();
+      if (!acc[date]) acc[date] = { time: date };
+
+      acc[date][item.app_version] = item["crash.count"][index];
+    });
+    return acc;
+  }, {});
 };
 
 export default useChartData;
