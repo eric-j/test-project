@@ -9,22 +9,13 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import useChartData from "../customHooks/useChartData";
 import useChartStepData from "../customHooks/useChartStepData";
 import useVersionFilter from "../customHooks/useVersionFilter";
 import { LINE_CHART_COLORS } from "../consts/chartColors";
 import VersionFilter from "./VersionFilter";
 
-interface MobileLineChartProps {
-  usesStepIntervals?: boolean;
-}
-
-const MobileLineChart: React.FC<MobileLineChartProps> = ({
-  usesStepIntervals,
-}) => {
-  const { chartData, appVersions } = usesStepIntervals
-    ? useChartStepData()
-    : useChartData();
+const MobileLineChart: React.FC = ({}) => {
+  const { chartData, appVersions } = useChartStepData();
 
   const {
     filteredChartData,
@@ -36,11 +27,6 @@ const MobileLineChart: React.FC<MobileLineChartProps> = ({
   return (
     <>
       <div className="chart-header">
-        {usesStepIntervals && <h2>Using Start + End + Second Interval</h2>}
-        {!usesStepIntervals && (
-          <h2>Using just timestamps provided in data array</h2>
-        )}
-
         <VersionFilter
           appVersions={versions}
           selectedVersion={selectedVersion}

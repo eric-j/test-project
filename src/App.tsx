@@ -8,11 +8,9 @@ const App: React.FC = () => {
     <div className="App">
       <div className="disclaimer">
         <div>
-          Hello! So quite frankly I was unsure how this data was supposed to be
-          represented. Given the instructions, it was vague to me if I was
-          supposed to show only the timestamp values or show a value for every
-          "step" interval between the "start" and "end" time. Below you will see
-          an example of both.
+          Hello! I made the assumption that there should be a data point for
+          every step interval and that the chart should start and stop at the
+          dedicated start/stop times.
         </div>
         <div>
           BONUS: For the bonus I added a version filter. I figured since mobile
@@ -22,7 +20,6 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      <MobileLineChart usesStepIntervals={true} />
       <MobileLineChart />
     </div>
   );
