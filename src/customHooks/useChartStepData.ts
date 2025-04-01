@@ -21,9 +21,12 @@ const useChartStepData = () => {
           result.step
         );
 
-        const { parsedData, versions } = parseResponse(result.data, timestamps);
+        const { parsedDataArray, versions } = parseResponse(
+          result.data,
+          timestamps
+        );
 
-        setChartData(Object.values(parsedData));
+        setChartData(parsedDataArray);
         setAppVersions(versions);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -33,6 +36,18 @@ const useChartStepData = () => {
     fetchData();
   }, []);
 
+  // chartData example:
+  // [
+  //   {
+  //     "time": "3/16/2025, 5:30:00 AM",
+  //     "25.11.0.1": 0,
+  //     "25.12.0.2": 0,
+  //     "25.13.0.0": 0,
+  //     "25.11.0.3": 0,
+  //     "25.14.0.1": 0,
+  //     "25.15.0.3": 0
+  //   }, ...
+  // ]
   return { chartData, appVersions };
 };
 
@@ -82,7 +97,9 @@ const parseResponse = (
     return parseFloat(versionA) - parseFloat(versionB);
   });
 
-  return { parsedData, versions };
+  const parsedDataArray = Object.values(parsedData);
+
+  return { parsedDataArray, versions };
 };
 
 export default useChartStepData;
