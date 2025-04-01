@@ -15,3 +15,8 @@ export interface MockResponseType {
   start: string;
   step: number;
 }
+
+export interface VersionData {
+  time: string;
+  [appVersion: string]: number | string;
+}

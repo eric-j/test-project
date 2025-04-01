@@ -1,15 +1,6 @@
 import { useState, useEffect } from "react";
-import { MockResponseType, MockResponseData } from "../types";
+import { MockResponseType, VersionData } from "../types";
 import { mockResponse } from "../mockData";
-
-interface VersionData {
-  time: string;
-  [appVersion: string]: number | string;
-}
-
-interface ParsedData {
-  [date: string]: VersionData;
-}
 
 const useChartStepData = () => {
   const [chartData, setChartData] = useState<VersionData[]>([]);
@@ -29,11 +20,11 @@ const useChartStepData = () => {
           result.end,
           result.step
         );
-        const parsedData = initializeParsedData(timestamps, result.data);
-        updateParsedData(parsedData, result.data);
+
+        const { parsedData, versions } = parseResponse(result.data, timestamps);
 
         setChartData(Object.values(parsedData));
-        setAppVersions(getUniqueAppVersions(result.data));
+        setAppVersions(versions);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -49,52 +40,41 @@ const generateTimestamps = (
   start: string,
   end: string,
   step: number
-): number[] => {
+): string[] => {
   const startTime = new Date(start).getTime() / 1000;
   const endTime = new Date(end).getTime() / 1000;
-  const timestamps: number[] = [];
 
+  const timestamps: string[] = [];
   for (let t = startTime; t <= endTime; t += step) {
-    timestamps.push(t);
+    timestamps.push(new Date(t * 1000).toLocaleString());
   }
 
   return timestamps;
 };
 
-const initializeParsedData = (
-  timestamps: number[],
-  data: MockResponseData[]
-): ParsedData => {
-  const parsedData: ParsedData = {};
+const parseResponse = (
+  data: MockResponseType["data"],
+  timestamps: string[]
+) => {
+  const parsedData: { [date: string]: VersionData } = {};
+  const versions = new Set<string>();
 
-  timestamps.forEach((t) => {
-    const date = new Date(t * 1000).toLocaleString();
+  timestamps.forEach((date) => {
     parsedData[date] = { time: date };
+
     data.forEach((item) => {
+      versions.add(item.app_version);
       parsedData[date][item.app_version] = 0;
+
+      item.timestamp.forEach((timeIndex, index) => {
+        const time = new Date(timeIndex * 1000).toLocaleString();
+        if (time === date)
+          parsedData[date][item.app_version] = item["crash.count"][index];
+      });
     });
   });
 
-  return parsedData;
-};
-
-const updateParsedData = (
-  parsedData: ParsedData,
-  data: MockResponseData[]
-): void => {
-  data.forEach((item) => {
-    item.timestamp.forEach((time, index) => {
-      const date = new Date(time * 1000).toLocaleString();
-      if (!parsedData[date]) {
-        parsedData[date] = { time: date };
-      }
-      parsedData[date][item.app_version] = item["crash.count"][index];
-    });
-  });
-};
-
-const getUniqueAppVersions = (data: typeof mockResponse.data): string[] => {
-  return data.map((item) => item.app_version);
+  return { parsedData, versions: Array.from(versions) };
 };
 
 export default useChartStepData;
