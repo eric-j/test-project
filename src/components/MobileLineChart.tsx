@@ -11,7 +11,9 @@ import {
 } from "recharts";
 import useChartData from "../customHooks/useChartData";
 import useChartStepData from "../customHooks/useChartStepData";
+import useVersionFilter from "../customHooks/useVersionFilter";
 import { LINE_CHART_COLORS } from "../consts/chartColors";
+import VersionFilter from "./VersionFilter";
 
 interface MobileLineChartProps {
   usesStepIntervals?: boolean;
@@ -24,6 +26,13 @@ const MobileLineChart: React.FC<MobileLineChartProps> = ({
     ? useChartStepData()
     : useChartData();
 
+  const {
+    filteredChartData,
+    selectedVersion,
+    appVersions: versions,
+    handleVersionChange,
+  } = useVersionFilter(chartData, appVersions);
+
   return (
     <>
       <div className="chart-header">
@@ -31,11 +40,17 @@ const MobileLineChart: React.FC<MobileLineChartProps> = ({
         {!usesStepIntervals && (
           <h2>Using just timestamps provided in data array</h2>
         )}
+
+        <VersionFilter
+          appVersions={versions}
+          selectedVersion={selectedVersion}
+          onVersionChange={handleVersionChange}
+        />
       </div>
 
       <ResponsiveContainer width="100%" height={400}>
         <LineChart
-          data={chartData}
+          data={filteredChartData}
           margin={{ top: 20, right: 30, left: 20, bottom: 0 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
@@ -43,18 +58,27 @@ const MobileLineChart: React.FC<MobileLineChartProps> = ({
           <YAxis />
           <Tooltip />
           <Legend />
-          {appVersions.map((appVersion, index) => (
+          {selectedVersion ? (
             <Line
-              key={appVersion}
+              key={selectedVersion}
               type="monotone"
-              dataKey={appVersion}
-              stroke={LINE_CHART_COLORS[index % LINE_CHART_COLORS.length]}
+              dataKey={selectedVersion}
+              stroke={LINE_CHART_COLORS[0]}
             />
-          ))}
+          ) : (
+            versions.map((appVersion, index) => (
+              <Line
+                key={appVersion}
+                type="monotone"
+                dataKey={appVersion}
+                stroke={LINE_CHART_COLORS[index % LINE_CHART_COLORS.length]}
+              />
+            ))
+          )}
         </LineChart>
       </ResponsiveContainer>
     </>
   );
 };
 
-export default MobileLineChart;
+export default React.memo(MobileLineChart);

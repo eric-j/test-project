@@ -25,3 +25,9 @@ label {
   outline: none;
   border-color: #8884d8;
 }
+
+.disclaimer {
+  max-width: 1000px;
+  margin: 40px;
+  font-size: smaller;
+}
