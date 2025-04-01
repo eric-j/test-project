@@ -13,10 +13,10 @@ import useChartStepData from "../customHooks/useChartStepData";
 import useVersionFilter from "../customHooks/useVersionFilter";
 import { LINE_CHART_COLORS } from "../consts/chartColors";
 import VersionFilter from "./VersionFilter";
+import { formatXAxis } from "../utils/dateUtils";
 
 const MobileLineChart: React.FC = ({}) => {
   const { chartData, appVersions } = useChartStepData();
-
   const {
     filteredChartData,
     selectedVersion,
@@ -40,7 +40,7 @@ const MobileLineChart: React.FC = ({}) => {
           margin={{ top: 20, right: 30, left: 20, bottom: 0 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="time" />
+          <XAxis dataKey="time" tickFormatter={formatXAxis} />
           <YAxis />
           <Tooltip />
           <Legend />
