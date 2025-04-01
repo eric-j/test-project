@@ -34,6 +34,7 @@ const MobileLineChart: React.FC = ({}) => {
         />
       </div>
 
+      {/* https://recharts.org/en-US/api/LineChart */}
       <ResponsiveContainer width="100%" height={400}>
         <LineChart
           data={filteredChartData}

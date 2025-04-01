@@ -57,24 +57,32 @@ const parseResponse = (
   timestamps: string[]
 ) => {
   const parsedData: { [date: string]: VersionData } = {};
-  const versions = new Set<string>();
+  const versions: string[] = [];
 
   timestamps.forEach((date) => {
     parsedData[date] = { time: date };
 
     data.forEach((item) => {
-      versions.add(item.app_version);
+      if (!versions.includes(item.app_version)) {
+        versions.push(item.app_version);
+      }
+
       parsedData[date][item.app_version] = 0;
 
       item.timestamp.forEach((timeIndex, index) => {
         const time = new Date(timeIndex * 1000).toLocaleString();
-        if (time === date)
+        if (time === date) {
           parsedData[date][item.app_version] = item["crash.count"][index];
+        }
       });
     });
   });
 
-  return { parsedData, versions: Array.from(versions) };
+  versions.sort((versionA, versionB) => {
+    return parseFloat(versionA) - parseFloat(versionB);
+  });
+
+  return { parsedData, versions };
 };
 
 export default useChartStepData;
